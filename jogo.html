@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Prulândia</title>
+
+  <style>
+    * {
+      margin: 0;
+      border: 0;
+      padding: 0;
+    }
+    body {
+      background-color: #252525;
+    }
+
+    #screen {
+      display: none;
+      width: 100%;
+      height: 100vh;
+      background-color: #202020;
+      overflow: hidden;
+    }
+
+    #controller {
+      text-align: center;
+      height: 100vh;
+      text-align: center;
+    }
+
+    #play {
+      width: 250px;
+      height: 60px;
+      background-color: red;
+      color: white;
+      font-size: 2rem;
+      border: 0;
+      display: inline;
+    }
+
+    .person {
+      width: 150px;
+      height: 150px;
+      background: url(assets/images/cat.gif) center center no-repeat;
+      background-size: contain;
+      position: absolute;
+      left: 0;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      transition: .2s;
+    }
+  </style>
+</head>
+<body>
+  
+  <div id="screen"></div>
+
+  <div id="controller">
+    <button id="play">Play</button>
+  </div>
+
+  <audio id="player" src=""></audio>
+
+  <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"></script>
+  <script>
+
+    var memory = {
+      persons: [],
+      objects: [],
+      score: 0,
+      move: 50
+    };
+
+    $('#play').click(function() {
+      $('#controller').hide();
+      $('#screen').show();
+
+      $('#screen').html('<div class="person"></div>');
+    });
+
+    $(document).bind({
+      keyup: function(e) {
+
+        // left: 37
+        // top: 38
+        // right: 39
+        // bottom: 40
+        // space: 32
+
+        var bleft = 37;
+        var btop = 38;
+        var bright = 39;
+        var bbottom = 40;
+        var bspace = 32;
+
+        var key = e.which;
+
+        console.log('key = ', key);
+
+        if (key == bright) {
+          track('pru2');
+          left = parseInt($('.person').css('left'));
+          console.log('>>', left);
+          $('.person').css({'left': left + memory.move})
+        }
+
+        if (key == bleft) {
+          left = parseInt($('.person').css('left'));
+          console.log(left);
+          if (left > 0) {
+            $('.person').css({'left': left - memory.move});
+          }
+        }
+
+        if (key == bspace) {
+          track('pru');
+        }
+
+        function track(filename) {
+          var player = document.getElementById('player');
+          player.src = 'assets/sounds/' + filename + '.m4a';
+          player.play();
+        }
+        
+        if (key == bbottom) {
+          top = parseInt($('.person').css('top'));
+          console.log(top);
+          $('.person').css({'top': top + memory.move});
+        }
+      }
+    });
+
+  </script>
+
+</body>
+</html>
