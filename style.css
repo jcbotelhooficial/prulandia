@@ -31,17 +31,19 @@ body {
   cursor: pointer;
 }
 
-.person {
-  background: url(assets/images/sprite-cat.png) no-repeat;
-  background-position: 0 0;
+.person,
+.enemy {
+  display: inline-block;
   position: absolute;
 }
 
+.person {
+  background: url(assets/images/sprite-cat.png) 0 0 no-repeat;
+  z-index: 99999;
+}
+
 .enemy {
-  width: 100px;
-  height: 100px;
-  background: url(assets/images/cockroach.gif) center center no-repeat;
+  background: red url(assets/images/cockroach.gif) center center no-repeat;
   background-size: contain;
-  position: absolute;
-  transition: .2s;
+  z-index: 1;
 }

@@ -2,9 +2,12 @@ var memory = {
   persons: [],
   objects: [],
   score: 0,
-  move: 50,
-  sizePerson: 120,
-  quantityStartEnemy: 20
+  move: 25,
+  sizePersons: 65,
+  screen: {
+    width: parseInt($(document).width()),
+    height: parseInt($(document).height())
+  }
 };
 
 $('#play').click(function() {
@@ -12,7 +15,7 @@ $('#play').click(function() {
   $('#screen').show();
 
   loadPerson();
-  loadEnemy(memory.quantityStartEnemy);
+  loadEnemy();
 
   track('soundtrack', 'track.mp3');
 });
@@ -49,7 +52,7 @@ $(window).bind({
         if (personleft > 0) {
           $person.css({
             'left': `${personleft - memory.move}px`,
-            'background-position': '0 -120px'
+            'background-position': '-130px 0'
           });
         }
         break;
@@ -57,15 +60,17 @@ $(window).bind({
       case bbottom:
         $person.css({
           'top': `${persontop + memory.move}px`,
-          'background-position': '-240px 0'
+          'background-position': '-65px 0'
         });
         break;
       
       case btop:
-        $person.css({
-          'top': '0px',
-          'left': '0px'
-        });
+        if (persontop > 0) {
+          $person.css({
+            'top': `${persontop - memory.move}px`,
+            'background-position': '0 -65px'
+          });
+        }
         break;
       
       case bspace:
@@ -75,18 +80,34 @@ $(window).bind({
   }
 });
 
-function loadEnemy(quantity) {
-  width = parseInt($(document).width()) - 120;
-  height = parseInt($(document).height()) - 120;
+function searchEnemyPosition() {
+  return false;
+}
 
-  console.log('>>>', width, height);
+function loadEnemy(quantity = 20) {
+  width = memory.screen.width - memory.sizePersons;
+  height = memory.screen.height - memory.sizePersons;
 
   for (let i = 0; i < quantity; i++) {
+
+    var positionx = getRandomArbitrary(width),
+        positiony = getRandomArbitrary(height),
+        enemyid = positionx + positiony;
+
+    memory.persons.push({
+      id: enemyid,
+      x: positionx,
+      y: positiony
+    });
+
     $enemy = $(`<div></div>`);
     $enemy.addClass('enemy');
+    $enemy.attr({'data-id': enemyid});
     $enemy.css({
-      'left': getRandomArbitrary(width),
-      'top': getRandomArbitrary(height)
+      left: positionx,
+      top: positiony,
+      width: `${memory.sizePersons}px`,
+      height: `${memory.sizePersons}px`
     });
 
     $enemy.appendTo('#screen');
@@ -97,10 +118,10 @@ function loadPerson() {
   $person = $('<div></div>');
   $person.addClass('person');
   $person.css({
-    width: `${memory.sizePerson}px`,
-    height: `${memory.sizePerson}px`,
     top: '0px',
-    left: '0px'
+    left: '0px',
+    width: `${memory.sizePersons}px`,
+    height: `${memory.sizePersons}px`
   });
   $person.appendTo('#screen');
 }
@@ -113,8 +134,6 @@ function getRandomArbitrary(max) {
       height = parseInt($person.css('height')),
       minx = x + width,
       miny = y + height;
-
-  console.log(max, x, y);
 
   return Math.random() * (max - minx) + minx;
 }
