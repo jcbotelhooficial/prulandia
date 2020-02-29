@@ -6,6 +6,6 @@ Prulândia é um jogo de estilo plataforma, onde o Gatinho (Pru) tem como objeti
 
 Este jogo não possui fins e objetivos lucraticos, é somente um projeto para diversão e laser. Você é bem vindo para contribuir com novas funcionalidades.
 
-# Desenvolvedores / Contribuídores
+# Desenvolvedores / Contribuidores
 
 JC Botelho <claudio.botelho@live.com>
