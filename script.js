@@ -63,7 +63,8 @@ $(window).bind({
       
       case btop:
         $person.css({
-          'top': `${personleft - memory.move}px`
+          'top': '0px',
+          'left': '0px'
         });
         break;
       
