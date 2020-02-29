@@ -14,7 +14,7 @@ $('#play').click(function() {
   loadPerson();
   loadEnemy(memory.quantityStartEnemy);
 
-  //track('soundtrack', 'track.mp3');
+  track('soundtrack', 'track.mp3');
 });
 
 function track(target, filename) {
