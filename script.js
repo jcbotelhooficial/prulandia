@@ -5,17 +5,21 @@ var memory = {
   move: 25,
   sizePersons: 65,
   screen: {
-    width: parseInt($(document).width()),
-    height: parseInt($(document).height())
+    width: $(document).width(),
+    height: $(document).height()
   }
 };
+
+function pxToInt(str) {
+  return parseInt(str.replace('px', ''));
+}
 
 $('#play').click(function() {
   $('#controller').hide();
   $('#screen').show();
 
   loadPerson();
-  loadEnemy();
+  loadEnemy(1);
 
   track('soundtrack', 'track.mp3');
 });
@@ -37,31 +41,41 @@ $(window).bind({
 
     $person = $('.person');
 
-    personleft = parseInt($person.css('left'));
-    persontop = parseInt($person.css('top'));
+    personleft = pxToInt($person.css('left'));
+    persontop = pxToInt($person.css('top'));
 
     switch (e.which) {
       case bright:
-        $person.css({
-          'left': `${personleft + memory.move}px`,
-          'background-position': '0 0'
-        });
+        $person.css({'background-position': '0 0'});
+        if (personleft + memory.sizePersons + memory.move < memory.screen.width) {
+          personleft += memory.move;
+          $person.css({'left': `${personleft}px`});
+        } else {
+          personleft = memory.screen.width - memory.sizePersons;
+          $person.css({'left': `${personleft}px`});
+        }
         break;
     
       case bleft:
-        if (personleft > 0) {
-          $person.css({
-            'left': `${personleft - memory.move}px`,
-            'background-position': '-130px 0'
-          });
+        $person.css({'background-position': '-130px 0'});
+        if (personleft - memory.move > 0) {
+          personleft -= memory.move;
+          $person.css({'left': `${personleft}px`});
+        } else {
+          personleft = 0
+          $person.css({'left': `${personleft}px`});
         }
         break;
       
       case bbottom:
-        $person.css({
-          'top': `${persontop + memory.move}px`,
-          'background-position': '-65px 0'
-        });
+        $person.css({'background-position': '-65px 0'});
+        if (persontop + memory.sizePersons + memory.move < memory.screen.height) {
+          persontop += memory.move; 
+          $person.css({'top': `${persontop}px`});
+        } else {
+          persontop = memory.screen.height - memory.sizePersons;
+          $person.css({'top': `${persontop}px`});
+        }
         break;
       
       case btop:
@@ -70,6 +84,7 @@ $(window).bind({
             'top': `${persontop - memory.move}px`,
             'background-position': '0 -65px'
           });
+          persontop -= memory.move;
         }
         break;
       
@@ -77,10 +92,37 @@ $(window).bind({
         track('effects', 'pru.m4a');
         break;
     }
+
+    searchEnemyPosition(personleft, persontop);
   }
 });
 
-function searchEnemyPosition() {
+function searchEnemyPosition(x, y) {
+  var personx = x + memory.sizePersons,
+      persony = y + memory.sizePersons;
+
+  memory.persons.forEach(function(enemy) {
+    console.log(
+      'personx', personx,
+      'enemyx', enemy.x,
+      'persony', persony,
+      'enemeyy', enemy.y
+    );
+
+    if (
+      (
+        (personx > enemy.x && personx < enemy.x + memory.sizePersons) ||
+        (x > enemy.x && x < enemy.x < memory.sizePersons)
+      ) &&
+      (
+        (persony > enemy.y && persony < enemy.y + memory.sizePersons) ||
+        (y > enemy.y && y < enemy.y + memory.sizePersons)
+      )
+    ) {
+      alert('teste');
+    }
+  });
+
   return false;
 }
 
@@ -128,10 +170,10 @@ function loadPerson() {
 
 function getRandomArbitrary(max) {
   $person = $('.person');
-  var x = parseInt($person.css('left')),
-      y = parseInt($person.css('top')),
-      width = parseInt($person.css('width')),
-      height = parseInt($person.css('height')),
+  var x = pxToInt($person.css('left')),
+      y = pxToInt($person.css('top')),
+      width = pxToInt($person.css('width')),
+      height = pxToInt($person.css('height')),
       minx = x + width,
       miny = y + height;
 
