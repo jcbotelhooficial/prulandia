@@ -32,18 +32,24 @@ body {
 }
 
 .person,
-.enemy {
+.enemy,
+.little-cat {
   display: inline-block;
   position: absolute;
 }
 
 .person {
-  background: red url(assets/images/sprite-cat.png) 0 0 no-repeat;
+  background: url(assets/images/sprite-cat.png) 0 0 no-repeat;
   z-index: 99999;
 }
 
 .enemy {
-  background: red url(assets/images/cockroach.gif) center center no-repeat;
+  background: url(assets/images/cockroach.gif) center center no-repeat;
   background-size: contain;
   z-index: 1;
+}
+
+.little-cat {
+  background: url(assets/images/cat-save.png) 0 0 no-repeat;
+  z-index: 2;
 }

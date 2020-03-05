@@ -2,7 +2,7 @@ var memory = {
   persons: [],
   objects: [],
   score: 0,
-  move: 25,
+  move: 20,
   sizePersons: 65,
   sizeEnemy: 45,
   screen: {
@@ -115,7 +115,17 @@ function searchEnemyPosition(x1, y1) {
       (py > y2 && py < ey) && (x1 > x2 && x1 < ex) ||
       (x1 > x2 && x1 < ex) && (y1 > y2 && y1 < ey)
     ) {
-      alert('Enemy ' + enemy.id);
+      console.log('Enemy ' + enemy.id);
+
+      switch(enemy.type) {
+        case 'cat':
+          console.log('Você salvou o gatinho');
+          break;
+        
+        case 'enemy':
+          console.log('Você foi atacado por uma barata');
+          break;
+      }
     }
   });
 
@@ -127,7 +137,6 @@ function loadObstacles(enemy = 25) {
   height = memory.screen.height - memory.sizeEnemy;
 
   for (let i = 0; i < enemy; i++) {
-
     var x = getRandomArbitrary(width),
         y = getRandomArbitrary(height),
         id = x + y;
@@ -151,6 +160,27 @@ function loadObstacles(enemy = 25) {
 
     $enemy.appendTo('#screen');
   }
+
+  littlex = memory.screen.width - memory.sizePersons;
+  littley = memory.screen.height - memory.sizePersons;
+
+  $littleCat = $('<div></div>');
+  $littleCat.addClass('little-cat');
+  $littleCat.attr({'data-id': id});
+  $littleCat.css({
+    left: `${littlex}px`,
+    top: `${littley}px`,
+    width: `${memory.sizePersons}px`,
+    height: `${memory.sizePersons}px`
+  });
+  $littleCat.appendTo('#screen');
+
+  memory.persons.push({
+    type: 'cat',
+    id: 1,
+    x: littlex,
+    y: littley
+  });
 }
 
 function loadPerson() {
