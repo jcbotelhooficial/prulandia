@@ -38,7 +38,7 @@ body {
 }
 
 .person {
-  background: blue url(assets/images/sprite-cat.png) 0 0 no-repeat;
+  background: red url(assets/images/sprite-cat.png) 0 0 no-repeat;
   z-index: 99999;
 }
 

@@ -4,6 +4,7 @@ var memory = {
   score: 0,
   move: 25,
   sizePersons: 65,
+  sizeEnemy: 45,
   screen: {
     width: $(document).width(),
     height: $(document).height()
@@ -19,7 +20,7 @@ $('#play').click(function() {
   $('#screen').show();
 
   loadPerson();
-  loadEnemy(1);
+  loadObstacles();
 
   track('soundtrack', 'track.mp3');
 });
@@ -97,59 +98,55 @@ $(window).bind({
   }
 });
 
-function searchEnemyPosition(x, y) {
-  var personx = x + memory.sizePersons,
-      persony = y + memory.sizePersons;
+function searchEnemyPosition(x1, y1) {
+  var px = x1 + memory.sizePersons,
+      py = y1 + memory.sizePersons;
 
   memory.persons.forEach(function(enemy) {
-    console.log(
-      'personx', personx,
-      'enemyx', enemy.x,
-      'persony', persony,
-      'enemeyy', enemy.y
-    );
+
+    var x2 = enemy.x,
+        y2 = enemy.y,
+        ex = enemy.x + memory.sizeEnemy,
+        ey = enemy.y + memory.sizeEnemy;
 
     if (
-      (
-        (personx > enemy.x && personx < enemy.x + memory.sizePersons) ||
-        (x > enemy.x && x < enemy.x < memory.sizePersons)
-      ) &&
-      (
-        (persony > enemy.y && persony < enemy.y + memory.sizePersons) ||
-        (y > enemy.y && y < enemy.y + memory.sizePersons)
-      )
+      (py > y2 && py < ey) && (px > x2 && px < ex) ||
+      (px > x2 && px < ex) && (y1 > y2 && y1 < ey) ||
+      (py > y2 && py < ey) && (x1 > x2 && x1 < ex) ||
+      (x1 > x2 && x1 < ex) && (y1 > y2 && y1 < ey)
     ) {
-      alert('teste');
+      alert('Enemy ' + enemy.id);
     }
   });
 
   return false;
 }
 
-function loadEnemy(quantity = 20) {
-  width = memory.screen.width - memory.sizePersons;
-  height = memory.screen.height - memory.sizePersons;
+function loadObstacles(enemy = 25) {
+  width = memory.screen.width - memory.sizeEnemy;
+  height = memory.screen.height - memory.sizeEnemy;
 
-  for (let i = 0; i < quantity; i++) {
+  for (let i = 0; i < enemy; i++) {
 
-    var positionx = getRandomArbitrary(width),
-        positiony = getRandomArbitrary(height),
-        enemyid = positionx + positiony;
+    var x = getRandomArbitrary(width),
+        y = getRandomArbitrary(height),
+        id = x + y;
 
     memory.persons.push({
-      id: enemyid,
-      x: positionx,
-      y: positiony
+      type: 'enemy',
+      id: id,
+      x: x,
+      y: y
     });
 
     $enemy = $(`<div></div>`);
     $enemy.addClass('enemy');
-    $enemy.attr({'data-id': enemyid});
+    $enemy.attr({'data-id': id});
     $enemy.css({
-      left: positionx,
-      top: positiony,
-      width: `${memory.sizePersons}px`,
-      height: `${memory.sizePersons}px`
+      left: x,
+      top: y,
+      width: `${memory.sizeEnemy}px`,
+      height: `${memory.sizeEnemy}px`
     });
 
     $enemy.appendTo('#screen');
