@@ -61,7 +61,7 @@ body {
 }
 
 .animation-asas {
-  animation: linear 1s asas;
+  animation: 1.5s steps(2, end) asas;
 }
 
 @keyframes asas {
