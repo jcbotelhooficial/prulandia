@@ -11,8 +11,7 @@ body {
   display: none;
   width: 100%;
   height: 100vh;
-  background-image: url(assets/images/sprite1.png);
-  background-color: #202020;
+  background: black url(assets/images/object-3.png);
   overflow: hidden;
 }
 
@@ -33,23 +32,52 @@ body {
 
 .person,
 .enemy,
-.little-cat {
+.little-cat,
+.tree {
   display: inline-block;
   position: absolute;
 }
 
 .person {
-  background: url(assets/images/sprite-cat.png) 0 0 no-repeat;
+  background: url(assets/images/object-primary.png) 0 0 no-repeat;
   z-index: 99999;
 }
 
+.tree {
+  background: url(assets/images/object-4.png) 0 0 no-repeat;
+  background-size: 288px 288px;
+  z-index: 2
+}
+
 .enemy {
-  background: url(assets/images/cockroach.gif) center center no-repeat;
-  background-size: contain;
+  background: url(assets/images/object-1.png) 0 0 no-repeat;
+  background-size: 90px 45px;
   z-index: 1;
 }
 
 .little-cat {
-  background: url(assets/images/cat-save.png) 0 0 no-repeat;
-  z-index: 2;
+  background: url(assets/images/object-2.png) 0 0 no-repeat;
+  z-index: 10;
+}
+
+.animation-asas {
+  animation: linear 1s asas;
+}
+
+@keyframes asas {
+  0% {
+    background-position: 0 0;
+  }
+  25% {
+    background-position: -45px 0;
+  }
+  50% {
+    background-position: 0 0;
+  }
+  75% {
+    background-position: -45px 0;
+  }
+  100% {
+    background-position: 0 0;
+  }
 }

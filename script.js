@@ -5,6 +5,7 @@ var memory = {
   move: 20,
   sizePersons: 65,
   sizeEnemy: 45,
+  sizeTree: 96,
   screen: {
     width: $(document).width(),
     height: $(document).height()
@@ -20,9 +21,9 @@ $('#play').click(function() {
   $('#screen').show();
 
   loadPerson();
-  loadObstacles();
+  loadObjects();
 
-  track('soundtrack', 'track.mp3');
+  //track('soundtrack', 'track.mp3');
 });
 
 function track(target, filename) {
@@ -94,11 +95,11 @@ $(window).bind({
         break;
     }
 
-    searchEnemyPosition(personleft, persontop);
+    searchObjectPosition(personleft, persontop);
   }
 });
 
-function searchEnemyPosition(x1, y1) {
+function searchObjectPosition(x1, y1) {
   var px = x1 + memory.sizePersons,
       py = y1 + memory.sizePersons;
 
@@ -115,7 +116,7 @@ function searchEnemyPosition(x1, y1) {
       (py > y2 && py < ey) && (x1 > x2 && x1 < ex) ||
       (x1 > x2 && x1 < ex) && (y1 > y2 && y1 < ey)
     ) {
-      console.log('Enemy ' + enemy.id);
+      console.log('Object ID: ' + enemy.id);
 
       switch(enemy.type) {
         case 'cat':
@@ -124,6 +125,11 @@ function searchEnemyPosition(x1, y1) {
         
         case 'enemy':
           console.log('Você foi atacado por uma barata');
+          $(`[data-id='${enemy.id}']`).addClass('animation-asas');
+          break;
+        
+        case 'tree':
+          console.log('Você bateu em uma árvore');
           break;
       }
     }
@@ -132,13 +138,13 @@ function searchEnemyPosition(x1, y1) {
   return false;
 }
 
-function loadObstacles(enemy = 25) {
-  width = memory.screen.width - memory.sizeEnemy;
-  height = memory.screen.height - memory.sizeEnemy;
+function loadObjects(objects = 25) {
+  var width = memory.screen.width,
+      height = memory.screen.height;
 
-  for (let i = 0; i < enemy; i++) {
-    var x = getRandomArbitrary(width),
-        y = getRandomArbitrary(height),
+  for (let i = 0; i < objects; i++) {
+    var x = getRandomArbitrary(width - memory.sizeEnemy),
+        y = getRandomArbitrary(height - memory.sizeEnemy),
         id = x + y;
 
     memory.persons.push({
@@ -148,21 +154,54 @@ function loadObstacles(enemy = 25) {
       y: y
     });
 
+    rotate = getRandomSimple(380);
+
     $enemy = $(`<div></div>`);
     $enemy.addClass('enemy');
     $enemy.attr({'data-id': id});
     $enemy.css({
-      left: x,
-      top: y,
-      width: `${memory.sizeEnemy}px`,
-      height: `${memory.sizeEnemy}px`
+      'left': x,
+      'top': y,
+      'width': `${memory.sizeEnemy}px`,
+      'height': `${memory.sizeEnemy}px`,
+      'transform': `rotate(${rotate}deg)`
     });
 
     $enemy.appendTo('#screen');
   }
 
-  littlex = memory.screen.width - memory.sizePersons;
-  littley = memory.screen.height - memory.sizePersons;
+  for (let i = 0; i < objects / 2; i++) {
+    var x = getRandomArbitrary(width - memory.sizeTree),
+        y = getRandomArbitrary(height - memory.sizeTree),
+        id = x + y;
+
+    memory.persons.push({
+      type: 'tree',
+      id: id,
+      x: x,
+      y: y
+    });
+
+    imgX = memory.sizeTree * getRandomSimple(3);
+    imgY = memory.sizeTree * getRandomSimple(2);
+
+
+    $tree = $(`<div></div>`);
+    $tree.addClass('tree');
+    $tree.attr({'data-id': id});
+    $tree.css({
+      'left': x,
+      'top': y,
+      'width': `${memory.sizeTree}px`,
+      'height': `${memory.sizeTree}px`,
+      'background-position': `-${imgX}px -${imgY}px`
+    });
+
+    $tree.appendTo('#screen');
+  }
+
+  littlex = width - memory.sizePersons;
+  littley = height - memory.sizePersons;
 
   $littleCat = $('<div></div>');
   $littleCat.addClass('little-cat');
@@ -205,4 +244,8 @@ function getRandomArbitrary(max) {
       miny = y + height;
 
   return Math.random() * (max - minx) + minx;
+}
+
+function getRandomSimple(max = 10) {
+  return Math.floor(Math.random() * max);
 }
